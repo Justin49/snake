@@ -31,10 +31,18 @@ function Serpent() {
     // position du serpent
     this.x = 0;
     this.y = 0;
+
     // vitesse du serpent
     this.xVitesse = 0;
     this.yVitesse = 0;
 
+    // On insère la valeur de x et de y dans le tableau, corps du serpent, le serpent doit avoir un corps, le corps du serpent correspondra à un tableau, il suffira à chaque fois d'insérer la dernière position et supprimer la plus ancienne via un push
+    this.corps = [
+        {x:0, y:0},//x position 0
+        {x:50, y:0},//x position 1
+        {x:100, y:0}//x position 2
+    ];
+    
     // On dessine le serpent, pour ça on a besoin des coordonnées en largeur et en hauteur
     this.dessinerSerpent = function() {
 
@@ -98,12 +106,58 @@ function keyboard(evt) {
     }
 }
 
+// Objet pomme
+function Pomme() {
+
+    // position de la pomme
+    this.pommeX = 0;
+    this.pommeY = 0;
+
+    // modification coordonne pomme
+    this.modificationCoordonnéePomme = function() {
+
+        this.pommeX = Math.floor(Math.random() * (13 - 0)) + 0;
+        this.pommeY = Math.floor(Math.random() * (13 - 0)) + 0;
+
+        this.pommeX *= resolution;
+        this.pommeY *= resolution;
+    }
+
+    // affichage de la pomme
+    this.dessinerPomme = function() {
+
+        contexte.beginPath();
+        contexte.fillStyle = 'red';
+        contexte.rect(this.pommeX, this.pommeY, resolution, resolution);
+        contexte.fill();
+    }
+}
+
+// J'instancie un nouvelle objet Pomme
+let pomme = new Pomme();
+
+// Détection du serpent quand il sera sur la pomme
+function detectionCollisionSerpentSurPomme() {
+
+    // si le x de la pomme et égale au x du serpent et si le y du serpent est égale au y de la pomme
+    if(serpent.x == pomme.pommeX && serpent.y == pomme.pommeY) {
+
+        // je fais grossir le corps du serpent en ajoutant au tableau corps du serpent les coordonnées de la pomme
+        serpent.corps.push({x:pomme.pommeX, y:pomme.pommeY});
+
+        // j'appelle la méthode modificationCoordonnéePomme
+        pomme.modificationCoordonnéePomme();
+
+    }
+}
+
 const SNAKE_SPEED = 4;
 
 let lastRenderTime = 0;
 
 window.requestAnimationFrame(main);
 
+// Boucle du jeu
 function main(currentTime) {
 
     window.requestAnimationFrame(main);
@@ -121,5 +175,11 @@ function main(currentTime) {
 
     // On dessine le serpent
     serpent.dessinerSerpent();
+
+    // Détection collision entre le serpent et la pomme
+    detectionCollisionSerpentSurPomme()
+
+    // On dessine la pomme
+    pomme.dessinerPomme();
 
 };
