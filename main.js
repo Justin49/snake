@@ -151,6 +151,31 @@ function detectionCollisionSerpentSurPomme() {
     }
 }
 
+// Rénitialiser la position initiale du serpent
+function rénitialiserPositionSerpent() {
+
+    // position du serpent à 0
+    serpent.x = 0;
+    serpent.y = 0;
+
+    // vitesse du serpent à 0
+    serpent.xVitesse = 0;
+    serpent.yVitesse = 0;
+}
+
+// Détection du serpent quand il touchera les bord du caneva
+function detectionCollisionSerpentSurCanvas() {
+
+    // si la tête du serpent est supérieur ou égale à la longueur du caneva et si la tête du serpent est supérieur ou égale à la hauteur du caneva
+    if(serpent.x >= largeur*resolution || serpent.y < 0 ||  serpent.x < 0 || serpent.y >= hauteur*resolution) {
+
+        // alors on appelle la position initiale du serpent
+        rénitialiserPositionSerpent();   
+        
+    }
+
+}
+
 const SNAKE_SPEED = 4;
 
 let lastRenderTime = 0;
@@ -175,6 +200,9 @@ function main(currentTime) {
 
     // On dessine le serpent
     serpent.dessinerSerpent();
+
+    // Détection collision entre le serpent et le canva
+    detectionCollisionSerpentSurCanvas();
 
     // Détection collision entre le serpent et la pomme
     detectionCollisionSerpentSurPomme()
