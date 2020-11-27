@@ -24,6 +24,7 @@ function renitialiser() {
     contexte.fillStyle = "white";
     contexte.rect(0, 0, c.width, c.height);
     contexte.fill();
+   
 }
 
 // Objet serpent
@@ -148,6 +149,9 @@ function detectionCollisionSerpentSurPomme() {
         // j'appelle la méthode modificationCoordonnéePomme
         pomme.modificationCoordonnéePomme();
 
+        // le score augmente de 1 à chaque fois que le serpent touche la pomme
+        score++;
+
     }
 }
 
@@ -176,7 +180,11 @@ function detectionCollisionSerpentSurCanvas() {
 
 }
 
-const SNAKE_SPEED = 4;
+// variable du score
+let score = 0;
+
+// Vitesse du jeu
+const SNAKE_SPEED = 10;
 
 let lastRenderTime = 0;
 
@@ -194,6 +202,11 @@ function main(currentTime) {
 
     // J'appelle ma fonction qui créer un carré blanc
     renitialiser();
+
+    // Affichage du score en haut au milieu du canvas
+    contexte.fillStyle = "black";
+    contexte.font = "50px serif";
+    contexte.fillText(score, 350, 50);
 
     // Met à jour la position du serpent sur le canvas
     serpent.miseAJour();
