@@ -30,8 +30,8 @@ function renitialiser() {
 // Objet serpent
 function Serpent() {
     // position du serpent
-    this.x = 0;
-    this.y = 0;
+    //this.x = 0;
+    //this.y = 0;
 
     // vitesse du serpent
     this.xVitesse = 0;
@@ -40,7 +40,7 @@ function Serpent() {
     // On insère la valeur de x et de y dans le tableau, corps du serpent, le serpent doit avoir un corps, le corps du serpent correspondra à un tableau, il suffira à chaque fois d'insérer la dernière position et supprimer la plus ancienne via un push
     this.corps = [
         {x:0, y:0},//x position 0
-        {x:50, y:0},//x position 1
+        {x:50, y:0},
         {x:100, y:0}//x position 2
     ];
     
@@ -54,21 +54,34 @@ function Serpent() {
         // Couleur du serpent
         contexte.fillStyle = "#f1c40f";
         contexte.fill();
+
+        for(var i = 0; i < this.corps.length; i++) {
+
+            contexte.beginPath();
+
+            contexte.rect(this.corps[i].x, this.corps[i].y, resolution, resolution);
+
+            // Couleur du serpent
+            contexte.fillStyle = "#f1c40f";
+            contexte.fill();
+        }
     }
 
     // Fonction qui va mettre à jour la position du serpent
     this.miseAJour = function() {
+        
+        for(var i = 0; i < this.corps.length; i++) {
 
-        this.x += this.xVitesse;
-        this.y += this.yVitesse;
+            //this.corps[i] = this.corps[i+1];
+            //this.corps[i] = this.corps[i+1];
+
+            //this.corps[this.corps.length-1] += this.corps[i];
+            //this.corps[this.corps.length-1] += this.corps[i];
+        }
+
+      
     }
 
-}
-
-// le joueur à la fin de la partie à son score qui revient à 0
-function resetScore() {
-
-    score = 0;
 }
 
 // J'instancie un nouvelle objet Serpent
@@ -84,31 +97,26 @@ function keyboard(evt) {
             // touche gauche
             serpent.xVitesse = -resolution;
             serpent.yVitesse = 0;
-            console.log("gauche");
             break;
         case 38:
             // touche haut
             serpent.xVitesse = 0
             serpent.yVitesse = -resolution;
-            console.log("haut");
             break;
         case 39:
             // touche droite
             serpent.xVitesse = resolution;
             serpent.yVitesse = 0;
-            console.log("droite");
             break;
         case 40:
             // touche bas
             serpent.xVitesse = 0;
             serpent.yVitesse = resolution;
-            console.log("bas");
             break;
         case 32:
             // touche espace
             serpent.xVitesse = 0;
             serpent.yVitesse = 0;
-            console.log("espace");
             break;
     }
 }
@@ -149,7 +157,7 @@ function detectionCollisionSerpentSurPomme() {
     // si le x de la pomme et égale au x du serpent et si le y du serpent est égale au y de la pomme
     if(serpent.x == pomme.pommeX && serpent.y == pomme.pommeY) {
 
-        // je fais grossir le corps du serpent en ajoutant au tableau corps du serpent les coordonnées de la pomme
+        // je fais grossir le corps du serpent en ajoutant au corps du serpent les coordonnées de la pomme
         serpent.corps.push({x:pomme.pommeX, y:pomme.pommeY});
 
         // j'appelle la méthode modificationCoordonnéePomme
@@ -191,6 +199,12 @@ function detectionCollisionSerpentSurCanvas() {
 
 // variable du score
 let score = 0;
+
+// le joueur à la fin de la partie à son score qui revient à 0
+function resetScore() {
+
+    score = 0;
+}
 
 // Vitesse du jeu
 const SNAKE_SPEED = 10;
