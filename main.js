@@ -65,6 +65,12 @@ function Serpent() {
 
 }
 
+// le joueur à la fin de la partie à son score qui revient à 0
+function resetScore() {
+
+    score = 0;
+}
+
 // J'instancie un nouvelle objet Serpent
 let serpent = new Serpent();
 
@@ -174,7 +180,10 @@ function detectionCollisionSerpentSurCanvas() {
     if(serpent.x >= largeur*resolution || serpent.y < 0 ||  serpent.x < 0 || serpent.y >= hauteur*resolution) {
 
         // alors on appelle la position initiale du serpent
-        rénitialiserPositionSerpent();   
+        rénitialiserPositionSerpent();
+        
+        // on reset le score du joueur à 0
+        resetScore();
         
     }
 
