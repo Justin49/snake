@@ -34,14 +34,14 @@ function Serpent() {
     //this.y = 0;
 
     // vitesse du serpent
-    this.xVitesse = 0;
+    this.xVitesse = resolution;
     this.yVitesse = 0;
 
     // On insère la valeur de x et de y dans le tableau, corps du serpent, le serpent doit avoir un corps, le corps du serpent correspondra à un tableau, il suffira à chaque fois d'insérer la dernière position et supprimer la plus ancienne via un push
     this.corps = [
-        {x:0, y:0},//x position 0
-        {x:50, y:0},
-        {x:100, y:0}//x position 2
+        {x:50, y:50},//x position 0
+        {x:100, y:50},// x position 1
+        {x:150, y:50}//x position 2
     ];
     
     // On dessine le serpent, pour ça on a besoin des coordonnées en largeur et en hauteur
@@ -49,38 +49,31 @@ function Serpent() {
 
         contexte.beginPath();
 
-        contexte.rect(this.x, this.y, resolution, resolution);
-
-        // Couleur du serpent
-        contexte.fillStyle = "#f1c40f";
-        contexte.fill();
-
         for(var i = 0; i < this.corps.length; i++) {
-
-            contexte.beginPath();
-
-            contexte.rect(this.corps[i].x, this.corps[i].y, resolution, resolution);
 
             // Couleur du serpent
             contexte.fillStyle = "#f1c40f";
+            contexte.rect(this.corps[i].x, this.corps[i].y, resolution, resolution);
             contexte.fill();
+            
         }
+
     }
 
     // Fonction qui va mettre à jour la position du serpent
     this.miseAJour = function() {
-        
-        for(var i = 0; i < this.corps.length; i++) {
 
-            //this.corps[i] = this.corps[i+1];
-            //this.corps[i] = this.corps[i+1];
+       for(var i = 0; i < this.corps.length-1; i++) {
 
-            //this.corps[this.corps.length-1] += this.corps[i];
-            //this.corps[this.corps.length-1] += this.corps[i];
-        }
+          this.corps[i].x = this.corps[i+1].x;
+          this.corps[i].y = this.corps[i+1].y;
+       }
 
-      
+        this.corps[this.corps.length-1].x += this.xVitesse;
+        this.corps[this.corps.length-1].y += this.yVitesse;
+
     }
+
 
 }
 
@@ -151,11 +144,13 @@ function Pomme() {
 // J'instancie un nouvelle objet Pomme
 let pomme = new Pomme();
 
+pomme.modificationCoordonnéePomme();
+
 // Détection du serpent quand il sera sur la pomme
 function detectionCollisionSerpentSurPomme() {
 
     // si le x de la pomme et égale au x du serpent et si le y du serpent est égale au y de la pomme
-    if(serpent.x == pomme.pommeX && serpent.y == pomme.pommeY) {
+    if(serpent.corps[serpent.corps.length -1].x == pomme.pommeX && serpent.corps[serpent.corps.length -1].y == pomme.pommeY) {
 
         // je fais grossir le corps du serpent en ajoutant au corps du serpent les coordonnées de la pomme
         serpent.corps.push({x:pomme.pommeX, y:pomme.pommeY});
@@ -172,30 +167,81 @@ function detectionCollisionSerpentSurPomme() {
 // Rénitialiser la position initiale du serpent
 function rénitialiserPositionSerpent() {
 
-    // position du serpent à 0
-    serpent.x = 0;
-    serpent.y = 0;
+    // position corps du serpent revenu à l'initial
+    serpent.corps = [
+        {x:50, y:50},
+        {x:100, y:50},
+        {x:150, y:50}
+    ];
 
     // vitesse du serpent à 0
     serpent.xVitesse = 0;
     serpent.yVitesse = 0;
 }
 
-// Détection du serpent quand il touchera les bord du caneva
+// Détection du serpent quand il touchera les 4 bord du caneva, ainsi que le serpent lui-même
 function detectionCollisionSerpentSurCanvas() {
 
-    // si la tête du serpent est supérieur ou égale à la longueur du caneva et si la tête du serpent est supérieur ou égale à la hauteur du caneva
-    if(serpent.x >= largeur*resolution || serpent.y < 0 ||  serpent.x < 0 || serpent.y >= hauteur*resolution) {
+    // si la tête du serpent est supérieur ou égal au bord à droite du caneva
+    if(serpent.corps[serpent.corps.length-1].x >= largeur*resolution) {
 
+        console.log("Droite");
         // alors on appelle la position initiale du serpent
         rénitialiserPositionSerpent();
-        
+
         // on reset le score du joueur à 0
         resetScore();
-        
     }
 
+    // si la tête du serpent est inférieur à 0 au bord gauche du caneva
+    else if(serpent.corps[serpent.corps.length-1].x < 0) {
+
+        console.log("Gauche");
+        // alors on appelle la position initiale du serpent
+        rénitialiserPositionSerpent();
+
+        // on reset le score du joueur à 0
+        resetScore();
+    }
+
+    // si la tête du serpent est supérieur ou égal au bord en bas du caneva
+    else if(serpent.corps[serpent.corps.length-1].y >= hauteur*resolution) {
+
+        console.log("Bas")
+        // alors on appelle la position initiale du serpent
+        rénitialiserPositionSerpent();
+
+        // on reset le score du joueur à 0
+        resetScore();
+    }
+
+    // si la tête du serpent est inférieur à 0 au bord haut du caneva
+    else if(serpent.corps[serpent.corps.length-1].y < 0) {
+
+        console.log("Haut");
+        // alors on appelle la position initiale du serpent
+        rénitialiserPositionSerpent();
+
+        // on reset le score du joueur à 0
+        resetScore();
+    }
+
+    // On parcours le corps du serpent
+    for(var i = 0; i < serpent.corps.length -1; i++) {
+        // Si à chaque indice la tête du serpent est égal à l'indice du corps ou le serpent est passé
+        if(serpent.corps[serpent.corps.length -1].x === serpent.corps[i].x && serpent.corps[serpent.corps.length -1].y === serpent.corps[i].y) {
+
+            // alors on appelle la position initiale du serpent
+            rénitialiserPositionSerpent();
+
+            // on reset le score du joueur à 0
+            resetScore();
+        }
+    }
+        
+       
 }
+
 
 // variable du score
 let score = 0;
@@ -237,11 +283,11 @@ function main(currentTime) {
     // On dessine le serpent
     serpent.dessinerSerpent();
 
-    // Détection collision entre le serpent et le canva
+    // Détection collision entre le serpent et le canvas
     detectionCollisionSerpentSurCanvas();
 
     // Détection collision entre le serpent et la pomme
-    detectionCollisionSerpentSurPomme()
+    detectionCollisionSerpentSurPomme();
 
     // On dessine la pomme
     pomme.dessinerPomme();
